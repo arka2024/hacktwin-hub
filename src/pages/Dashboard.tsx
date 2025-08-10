@@ -14,15 +14,19 @@ import {
   MapPin,
   Mail,
   Phone,
-  LogOut
+  LogOut,
+  FileText,
+  Upload
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { ProblemSelector } from "@/components/ProblemSelector";
 
 // Mock user data
 const userData = {
   id: "USR001",
-  name: "Alex Rodriguez",
-  email: "alex.rodriguez@email.com",
+  name: "Satya Aman",
+  email: "satya.aman@email.com",
   phone: "+91 98765 43210",
   college: "IIT Delhi",
   year: "3rd Year",
@@ -32,17 +36,21 @@ const userData = {
   teamStatus: "Team Leader",
   teamName: "Code Crusaders",
   teamMembers: [
-    { name: "Alex Rodriguez", role: "Team Leader", skills: ["React", "Node.js"] },
-    { name: "Priya Sharma", role: "Designer", skills: ["UI/UX", "Figma"] },
-    { name: "Rahul Kumar", role: "Backend Dev", skills: ["Python", "Django"] },
-    { name: "Sneha Patel", role: "AI Specialist", skills: ["ML", "TensorFlow"] }
+    { name: "Satya Aman", role: "Team Leader", skills: ["React", "Node.js"] },
+    { name: "Arka Roy", role: "Frontend Dev", skills: ["React", "TypeScript"] },
+    { name: "Shalo", role: "Designer", skills: ["UI/UX", "Figma"] },
+    { name: "Sarthakbrata Halder", role: "Backend Dev", skills: ["Python", "Django"] },
+    { name: "Sarthak H", role: "Full Stack", skills: ["MERN", "DevOps"] },
+    { name: "Arkabrata Roy", role: "AI Specialist", skills: ["ML", "TensorFlow"] },
+    { name: "Carol Williams", role: "Data Analyst", skills: ["Python", "SQL"] },
+    { name: "Bob Chen", role: "Mobile Dev", skills: ["React Native", "Flutter"] },
+    { name: "Alice Johnson", role: "QA Engineer", skills: ["Testing", "Automation"] }
   ],
   selectedProblem: {
     id: 1,
     title: "AI-Powered Healthcare Assistant",
     category: "Healthcare",
-    difficulty: "Hard",
-    prize: "₹40,000"
+    difficulty: "Hard"
   },
   submissions: [],
   achievements: [
@@ -54,9 +62,17 @@ const userData = {
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const [selectedProblemId, setSelectedProblemId] = useState<number>(userData.selectedProblem.id);
+  const [showProblemSelector, setShowProblemSelector] = useState<boolean>(false);
 
   const handleLogout = () => {
     navigate("/");
+  };
+
+  const handleProblemSelect = (problemId: number) => {
+    setSelectedProblemId(problemId);
+    setShowProblemSelector(false);
+    // Here you would update the user data in your backend
   };
 
   return (
@@ -151,6 +167,35 @@ export default function Dashboard() {
                       ))}
                     </div>
                   </div>
+
+                  <div>
+                    <h4 className="font-semibold mb-3 flex items-center gap-2">
+                      <FileText className="w-4 h-4 text-cyber-purple" />
+                      Resume
+                    </h4>
+                    <div className="p-4 border border-border rounded-lg bg-secondary/30">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 rounded-lg bg-gradient-to-r from-cyber-purple/20 to-cyber-blue/20">
+                            <FileText className="w-5 h-5 text-cyber-purple" />
+                          </div>
+                          <div>
+                            <p className="font-medium text-sm">Resume.pdf</p>
+                            <p className="text-xs text-muted-foreground">Uploaded 2 days ago</p>
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button variant="outline" size="sm">
+                            View
+                          </Button>
+                          <Button variant="outline" size="sm">
+                            <Upload className="w-4 h-4 mr-1" />
+                            Update
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
 
@@ -242,45 +287,77 @@ export default function Dashboard() {
           </TabsContent>
 
           <TabsContent value="problem" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Star className="w-5 h-5 text-cyber-green" />
-                  Selected Problem Statement
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
+            {showProblemSelector ? (
+              <Card>
+                <CardHeader>
                   <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-bold">{userData.selectedProblem.title}</h3>
-                    <div className="flex gap-2">
-                      <Badge className="bg-cyber-green/20 text-cyber-green border-cyber-green/30">
-                        {userData.selectedProblem.category}
-                      </Badge>
-                      <Badge className="bg-cyber-pink/20 text-cyber-pink border-cyber-pink/30">
-                        {userData.selectedProblem.difficulty}
-                      </Badge>
+                    <CardTitle className="flex items-center gap-2">
+                      <Star className="w-5 h-5 text-cyber-green" />
+                      Problem Selection
+                    </CardTitle>
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setShowProblemSelector(false)}
+                      size="sm"
+                    >
+                      Back to Selected
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <ProblemSelector 
+                    selectedProblemId={selectedProblemId}
+                    onProblemSelect={handleProblemSelect}
+                  />
+                </CardContent>
+              </Card>
+            ) : (
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center gap-2">
+                      <Star className="w-5 h-5 text-cyber-green" />
+                      Selected Problem Statement
+                    </CardTitle>
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setShowProblemSelector(true)}
+                      size="sm"
+                    >
+                      Change Problem
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-xl font-bold">{userData.selectedProblem.title}</h3>
+                      <div className="flex gap-2">
+                        <Badge className="bg-cyber-green/20 text-cyber-green border-cyber-green/30">
+                          {userData.selectedProblem.category}
+                        </Badge>
+                        <Badge className="bg-cyber-pink/20 text-cyber-pink border-cyber-pink/30">
+                          {userData.selectedProblem.difficulty}
+                        </Badge>
+                      </div>
+                    </div>
+                    <p className="text-muted-foreground">
+                      Develop an AI-driven platform that can diagnose common health issues, provide medical 
+                      recommendations, and connect patients with healthcare professionals. Build a comprehensive 
+                      healthcare assistant that uses machine learning to analyze symptoms.
+                    </p>
+                    <div className="flex gap-4 pt-4">
+                      <Button className="bg-gradient-to-r from-cyber-purple to-cyber-blue hover:opacity-90">
+                        View Full Details
+                      </Button>
+                      <Button variant="outline" className="border-cyber-green text-cyber-green hover:bg-cyber-green/10">
+                        Start Working
+                      </Button>
                     </div>
                   </div>
-                  <div className="text-2xl font-bold text-cyber-green">
-                    Prize: {userData.selectedProblem.prize}
-                  </div>
-                  <p className="text-muted-foreground">
-                    Develop an AI-driven platform that can diagnose common health issues, provide medical 
-                    recommendations, and connect patients with healthcare professionals. Build a comprehensive 
-                    healthcare assistant that uses machine learning to analyze symptoms.
-                  </p>
-                  <div className="flex gap-4 pt-4">
-                    <Button className="bg-gradient-to-r from-cyber-purple to-cyber-blue hover:opacity-90">
-                      View Full Details
-                    </Button>
-                    <Button variant="outline" className="border-cyber-green text-cyber-green hover:bg-cyber-green/10">
-                      Start Working
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            )}
           </TabsContent>
 
           <TabsContent value="submissions" className="space-y-6">
