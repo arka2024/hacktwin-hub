@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
 
 interface TimeLeft {
   days: number;
@@ -16,8 +15,8 @@ export const CountdownTimer = () => {
     seconds: 0,
   });
 
-  // Hackathon start date - you can modify this
-  const hackathonStart = new Date("2024-03-15T09:00:00");
+  // Hackathon start date - August 10th, 2025 at 18:30
+  const hackathonStart = new Date("2025-08-10T18:30:00");
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -39,62 +38,53 @@ export const CountdownTimer = () => {
     return () => clearInterval(timer);
   }, [hackathonStart]);
 
+  const padNumber = (num: number): string => num.toString().padStart(2, '0');
+
   return (
-    <section id="timeline" className="py-20 px-4">
+    <section id="timeline" className="py-20 px-4 bg-black/95">
       <div className="max-w-4xl mx-auto text-center">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4">
-          <span className="bg-gradient-to-r from-cyber-purple to-cyber-blue bg-clip-text text-transparent">
+        <h2 className="text-4xl md:text-5xl font-bold mb-4">
+          <span className="bg-gradient-to-r from-[#9333EA] via-[#3B82F6] to-[#06B6D4] bg-clip-text text-transparent">
             Hackathon Starts In
           </span>
         </h2>
-        <p className="text-muted-foreground mb-12">March 15, 2024 at 9:00 AM</p>
+        <p className="text-gray-400 mb-12 text-lg">August 10, 2025 at 6:30 PM</p>
         
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { label: "Days", value: timeLeft.days },
-            { label: "Hours", value: timeLeft.hours },
-            { label: "Minutes", value: timeLeft.minutes },
-            { label: "Seconds", value: timeLeft.seconds },
-          ].map((item, index) => (
-            <Card key={item.label} className="bg-gradient-to-br from-secondary to-accent border-border/50">
-              <CardContent className="p-6">
-                <div className="text-3xl md:text-4xl font-bold text-cyber-purple mb-2">
-                  {String(item.value).padStart(2, "0")}
-                </div>
-                <div className="text-sm text-muted-foreground uppercase tracking-wider">
-                  {item.label}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        <div className="mt-16 space-y-8">
-          <h3 className="text-2xl font-bold text-cyber-blue">Event Timeline</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="bg-secondary border-cyber-purple/20">
-              <CardContent className="p-6">
-                <h4 className="font-bold text-cyber-purple mb-2">Registration</h4>
-                <p className="text-sm text-muted-foreground">March 1-14, 2024</p>
-                <p className="text-sm mt-2">Sign up and form your teams</p>
-              </CardContent>
-            </Card>
-            <Card className="bg-secondary border-cyber-blue/20">
-              <CardContent className="p-6">
-                <h4 className="font-bold text-cyber-blue mb-2">Hackathon</h4>
-                <p className="text-sm text-muted-foreground">March 15-17, 2024</p>
-                <p className="text-sm mt-2">48 hours of intense coding</p>
-              </CardContent>
-            </Card>
-            <Card className="bg-secondary border-cyber-green/20">
-              <CardContent className="p-6">
-                <h4 className="font-bold text-cyber-green mb-2">Results</h4>
-                <p className="text-sm text-muted-foreground">March 17, 2024</p>
-                <p className="text-sm mt-2">Winners announcement & prizes</p>
-              </CardContent>
-            </Card>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
+          <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20 shadow-2xl">
+            <div className="text-5xl md:text-6xl font-bold bg-gradient-to-br from-white to-gray-400 bg-clip-text text-transparent mb-2">
+              {padNumber(timeLeft.days)}
+            </div>
+            <div className="text-sm uppercase tracking-widest text-gray-400 font-medium">
+              Days
+            </div>
+          </div>
+          <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20 shadow-2xl">
+            <div className="text-5xl md:text-6xl font-bold bg-gradient-to-br from-white to-gray-400 bg-clip-text text-transparent mb-2">
+              {padNumber(timeLeft.hours)}
+            </div>
+            <div className="text-sm uppercase tracking-widest text-gray-400 font-medium">
+              Hours
+            </div>
+          </div>
+          <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20 shadow-2xl">
+            <div className="text-5xl md:text-6xl font-bold bg-gradient-to-br from-white to-gray-400 bg-clip-text text-transparent mb-2">
+              {padNumber(timeLeft.minutes)}
+            </div>
+            <div className="text-sm uppercase tracking-widest text-gray-400 font-medium">
+              Minutes
+            </div>
+          </div>
+          <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20 shadow-2xl">
+            <div className="text-5xl md:text-6xl font-bold bg-gradient-to-br from-white to-gray-400 bg-clip-text text-transparent mb-2">
+              {padNumber(timeLeft.seconds)}
+            </div>
+            <div className="text-sm uppercase tracking-widest text-gray-400 font-medium">
+              Seconds
+            </div>
           </div>
         </div>
+
       </div>
     </section>
   );
